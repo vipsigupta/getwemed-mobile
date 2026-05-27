@@ -114,7 +114,7 @@ export default function RootLayout() {
   if (route === 'SPLASH') {
     return (
       <SafeAreaProvider>
-        <SplashScreen onNext={() => go('ONBOARDING')} />
+        <SplashScreen onNext={() => go(authToken ? 'DASHBOARD' : 'ONBOARDING')} />
       </SafeAreaProvider>
     );
   }

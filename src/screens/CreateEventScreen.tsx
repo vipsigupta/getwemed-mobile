@@ -27,26 +27,35 @@ const { width } = Dimensions.get('window');
 // Religious / Cultural themes that drive custom backgrounds
 const RELIGION_THEMES: Record<string, string[]> = {
   HINDU: [
-    'https://images.unsplash.com/photo-1610030469668-93535c17b6b3?q=80&w=600', // Henna / Red Bride
-    'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=600', // Mandap sacred fire
-    'https://images.unsplash.com/photo-1609137882611-3a1b5fa5d836?q=80&w=600', // Indian Marigolds
+    'https://images.unsplash.com/photo-1610030469668-93535c17b6b3?q=80&w=1200', // Garland exchange / Henna / Red Bride
+    'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=1200', // Mandap sacred fire
+    'https://images.unsplash.com/photo-1609137882611-3a1b5fa5d836?q=80&w=1200', // Indian Marigolds
   ],
   SIKH: [
-    'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600', // Golden traditional dress
-    'https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600', // Sparkling golden lights
+    'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200', // Golden traditional dress
+    'https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1200', // Sparkling golden lights
   ],
   MUSLIM: [
-    'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=600', // Emerald warm decor
-    'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=600', // Elegant silver/gold festival lights
+    'https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1200', // Emerald warm decor
+    'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200', // Elegant silver/gold festival lights
   ],
   CHRISTIAN: [
-    'https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600', // White lights decor
-    'https://images.unsplash.com/photo-1505232458729-44772f364dd7?q=80&w=600', // White floral arches
+    'https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=1200', // White lights decor
+    'https://images.unsplash.com/photo-1505232458729-44772f364dd7?q=80&w=1200', // White floral arches
   ],
   OTHER: [
-    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600', // Multi-color sparkle event
-    'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=600', // Traditional flowers
+    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200', // Multi-color sparkle event
+    'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?q=80&w=1200', // Traditional flowers
   ]
+};
+
+// Premium aesthetic event-type default background images (used if no custom couple/star photo is added)
+const DEFAULT_EVENT_PHOTOS: Record<string, string> = {
+  WEDDING: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=1200', // Garland exchange / Mandap sacred fire
+  BIRTHDAY: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=1200', // Cake & golden pastel balloons decoration
+  ANNIVERSARY: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1200', // Fairy lights dinner / couples celebration
+  KITTY: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200', // Cozy cafe brunch / high-tea party
+  OTHER: 'https://images.unsplash.com/photo-1609137882611-3a1b5fa5d836?q=80&w=1200', // Marigolds & traditional brass diya
 };
 
 // Popular timeline suggestions by event type
@@ -220,15 +229,21 @@ export default function CreateEventScreen({ authToken, onBack, onEventCreated }:
 
   const handleReligionChange = (rel: 'HINDU' | 'SIKH' | 'MUSLIM' | 'CHRISTIAN' | 'OTHER') => {
     setReligion(rel);
-    if (RELIGION_THEMES[rel]?.[0]) {
-      setCoverUrl(RELIGION_THEMES[rel][0]);
+    if (eventType === 'WEDDING') {
+      if (RELIGION_THEMES[rel]?.[0]) {
+        setCoverUrl(RELIGION_THEMES[rel][0]);
+      }
+    } else {
+      setCoverUrl(DEFAULT_EVENT_PHOTOS[eventType] || DEFAULT_EVENT_PHOTOS.OTHER);
     }
   };
 
   const handleEventTypeChange = (type: 'WEDDING' | 'ANNIVERSARY' | 'BIRTHDAY' | 'KITTY' | 'OTHER') => {
     setEventType(type);
-    if (RELIGION_THEMES[religion]?.[0]) {
-      setCoverUrl(RELIGION_THEMES[religion][0]);
+    if (type === 'WEDDING') {
+      setCoverUrl(RELIGION_THEMES[religion]?.[0] || RELIGION_THEMES.HINDU[0]);
+    } else {
+      setCoverUrl(DEFAULT_EVENT_PHOTOS[type] || DEFAULT_EVENT_PHOTOS.OTHER);
     }
   };
 

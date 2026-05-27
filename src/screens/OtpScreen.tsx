@@ -44,7 +44,7 @@ export default function OtpScreen({ phone, onVerify, onBack }: OtpScreenProps) {
       const fullCode = [...newOtp.slice(0, 3), value].join('');
       if (fullCode.length === 4) {
         setLoading(true);
-        setTimeout(() => onVerify(fullCode), 500);
+        onVerify(fullCode);
       }
     }
   };
@@ -59,7 +59,7 @@ export default function OtpScreen({ phone, onVerify, onBack }: OtpScreenProps) {
     const code = otp.join('');
     if (code.length === 4 && !loading) {
       setLoading(true);
-      setTimeout(() => onVerify(code), 500);
+      onVerify(code);
     }
   };
 

@@ -31,12 +31,14 @@ export default function LoginScreen({ onSendOtp, onBack }: LoginScreenProps) {
   const isPhoneReady = phone.length === 10;
 
   const handleNext = () => {
+    if (phone.length !== 10) {
+      alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     Keyboard.dismiss();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      onSendOtp(phone || '9999999999');
-    }, 400);
+    onSendOtp(phone);
+    setLoading(false);
   };
 
   return (

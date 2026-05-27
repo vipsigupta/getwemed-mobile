@@ -408,15 +408,13 @@ export default function InvitationScreen({
 
   // ── Send OTP API ──
   const handleSendOtp = async () => {
-    if (!phoneNumber || phoneNumber.trim().length < 10) {
+    if (!phoneNumber || phoneNumber.trim().length !== 10) {
       setAuthError('Please enter a valid 10-digit mobile number');
       return;
     }
     setAuthLoading(true);
     setAuthError(null);
     try {
-      // Simulate real-world network delay for premium feel
-      await new Promise(resolve => setTimeout(resolve, 800));
       setAuthStep('otp');
     } catch (e) {
       setAuthError('Failed to send verification code. Please try again.');
