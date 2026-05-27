@@ -23,6 +23,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { getEventImageSource } from '../services/api';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
@@ -372,12 +373,13 @@ export default function InvitationScreen({
   const venueLink = venueParts[1]?.replace(')', '').trim() || locationLink || '';
 
   // Photo: Prioritize uploaded space couple photo, fallback to theme photo
-  let coverUri = t.photoUrl;
+  let coverUri: any = t.photoUrl;
   if (keyPeople?.starPhoto && keyPeople.starPhoto.trim() !== '') {
     coverUri = keyPeople.starPhoto;
   } else if (space?.coverUrl && space.coverUrl.trim() !== '' && !space.coverUrl.includes('unsplash.com/photo-1519225421980')) {
     coverUri = space.coverUrl;
   }
+  const coverSource = getEventImageSource(coverUri);
 
   const spaceName = space?.name || 'Wedding Celebration';
   const is2Person = (focusType === '2_PERSON') && person1Name && person2Name;
@@ -489,7 +491,7 @@ export default function InvitationScreen({
         {/* ── TOP: Dynamic Couple Photo Header ── */}
         <View style={styles.photoHeaderContainer}>
           <Image
-            source={{ uri: coverUri }}
+            source={coverSource}
             style={styles.topPhoto}
             resizeMode="cover"
           />

@@ -51,11 +51,11 @@ const RELIGION_THEMES: Record<string, string[]> = {
 
 // Premium aesthetic event-type default background images (used if no custom couple/star photo is added)
 const DEFAULT_EVENT_PHOTOS: Record<string, string> = {
-  WEDDING: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=1200', // Garland exchange / Mandap sacred fire
-  BIRTHDAY: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=1200', // Cake & golden pastel balloons decoration
-  ANNIVERSARY: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1200', // Fairy lights dinner / couples celebration
-  KITTY: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200', // Cozy cafe brunch / high-tea party
-  OTHER: 'https://images.unsplash.com/photo-1609137882611-3a1b5fa5d836?q=80&w=1200', // Marigolds & traditional brass diya
+  WEDDING: 'default_wedding',
+  BIRTHDAY: 'default_birthday',
+  ANNIVERSARY: 'default_anniversary',
+  KITTY: 'default_kitty',
+  OTHER: 'default_other',
 };
 
 // Popular timeline suggestions by event type
@@ -107,7 +107,7 @@ export default function CreateEventScreen({ authToken, onBack, onEventCreated }:
   // STEP 1 FIELDS: Combined Core info
   const [eventType, setEventType] = useState<'WEDDING' | 'ANNIVERSARY' | 'BIRTHDAY' | 'KITTY' | 'OTHER'>('WEDDING');
   const [religion, setReligion] = useState<'HINDU' | 'SIKH' | 'MUSLIM' | 'CHRISTIAN' | 'OTHER'>('HINDU');
-  const [coverUrl, setCoverUrl] = useState(RELIGION_THEMES.HINDU[0]);
+  const [coverUrl, setCoverUrl] = useState('default_wedding');
   const [starPhoto, setStarPhoto] = useState<string | null>(null);
 
   const [eventName, setEventName] = useState('');

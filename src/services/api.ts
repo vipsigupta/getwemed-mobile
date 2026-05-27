@@ -101,3 +101,39 @@ export const createSpace = async (token: string, spaceData: any) => {
     throw error;
   }
 };
+
+/**
+ * Maps default image identifier keys (offline-ready) to local required assets,
+ * and web-based image URLs to React Native source objects.
+ */
+export const getEventImageSource = (urlOrKey: any) => {
+  if (!urlOrKey) {
+    return require('../../assets/images/default_other.jpg');
+  }
+
+  // If already a local asset identifier (numeric)
+  if (typeof urlOrKey === 'number') {
+    return urlOrKey;
+  }
+
+  const key = String(urlOrKey).trim().toLowerCase();
+
+  if (key === 'default_wedding' || key.includes('default_wedding')) {
+    return require('../../assets/images/default_wedding.jpg');
+  }
+  if (key === 'default_birthday' || key.includes('default_birthday')) {
+    return require('../../assets/images/default_birthday.jpg');
+  }
+  if (key === 'default_anniversary' || key.includes('default_anniversary')) {
+    return require('../../assets/images/default_anniversary.jpg');
+  }
+  if (key === 'default_kitty' || key.includes('default_kitty')) {
+    return require('../../assets/images/default_kitty.jpg');
+  }
+  if (key === 'default_other' || key.includes('default_other')) {
+    return require('../../assets/images/default_other.jpg');
+  }
+
+  // Fallbacks for direct URLs
+  return { uri: urlOrKey };
+};

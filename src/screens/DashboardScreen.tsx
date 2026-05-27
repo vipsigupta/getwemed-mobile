@@ -17,7 +17,7 @@ import { Easing } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fetchDashboardSpaces } from '../services/api';
+import { fetchDashboardSpaces, getEventImageSource } from '../services/api';
 
 const { width, height } = Dimensions.get('window');
 
@@ -182,7 +182,7 @@ export default function DashboardScreen({ authToken, onSelectSpace, onCreateSpac
           onPress={() => onSelectSpace(item)}
         >
           <ImageBackground 
-            source={{ uri: item.coverUrl }} 
+            source={getEventImageSource(item.coverUrl)} 
             style={styles.cardImage}
             imageStyle={{ borderRadius: 20 }}
           >
