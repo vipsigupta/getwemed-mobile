@@ -159,6 +159,8 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <InvitationScreen
           space={selectedSpace}
+          authToken={authToken}
+          onLoginSuccess={(token) => setAuthToken(token)}
           onJoin={() => go('DASHBOARD')}
           onBack={() => go('DASHBOARD')}
         />
