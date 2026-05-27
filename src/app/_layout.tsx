@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 // ── App Screens ───────────────────────────────────────────────────────────────
@@ -13,6 +14,7 @@ import InvitationScreen from '../screens/InvitationScreen';
 import CreateEventScreen from '../screens/CreateEventScreen';
 
 const API_BASE = 'https://getmewed-backend.vercel.app/v1';
+const AUTH_TOKEN_KEY = 'getmewed_auth_token';
 
 type Route =
   | 'SPLASH'
@@ -33,6 +35,37 @@ export default function RootLayout() {
 
   const go = (r: Route) => setRoute(r);
 
+  // ── Load saved token on startup ──
+  useEffect(() => {
+    const loadSavedToken = async () => {
+      try {
+        const savedToken = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+        if (savedToken) {
+          setAuthToken(savedToken);
+          // Seamlessly auto-login straight to Dashboard if they have a token!
+          go('DASHBOARD');
+        }
+      } catch (e) {
+        console.warn('Failed to load persistent auth token:', e);
+      }
+    };
+    loadSavedToken();
+  }, []);
+
+  // ── Persisted state updater helper ──
+  const updateAuthToken = async (token: string | null) => {
+    try {
+      setAuthToken(token);
+      if (token) {
+        await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
+      } else {
+        await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+      }
+    } catch (e) {
+      console.warn('Failed to save auth token persistently:', e);
+    }
+  };
+
   // ── OTP verify: call backend with mock token pattern ──────────────────────
   const handleVerifyOtp = async (otp: string) => {
     try {
@@ -45,7 +78,7 @@ export default function RootLayout() {
         headers: { Authorization: `Bearer ${mockToken}` },
       });
 
-      setAuthToken(mockToken);
+      await updateAuthToken(mockToken);
 
       // If user has no name yet → profile setup, else dashboard
       const hasName = res.data?.user?.name?.trim();
@@ -54,7 +87,7 @@ export default function RootLayout() {
       console.error('OTP verify error:', err);
       // Even on error go to profile setup (dev mode)
       const mockToken = `mock_firebase_token_${phone.replace(/\D/g, '')}9999999999`;
-      setAuthToken(mockToken);
+      await updateAuthToken(mockToken);
       go('PROFILE_SETUP');
     }
   };
@@ -147,7 +180,7 @@ export default function RootLayout() {
           authToken={authToken}
           onSelectSpace={(space: any) => { setSelectedSpace(space); go('INVITATION'); }}
           onCreateSpace={() => go('CREATE_EVENT')}
-          onLogout={() => { setAuthToken(null); go('SPLASH'); }}
+          onLogout={() => { updateAuthToken(null); go('SPLASH'); }}
         />
       </SafeAreaProvider>
     );
@@ -160,7 +193,7 @@ export default function RootLayout() {
         <InvitationScreen
           space={selectedSpace}
           authToken={authToken}
-          onLoginSuccess={(token) => setAuthToken(token)}
+          onLoginSuccess={(token) => updateAuthToken(token)}
           onJoin={() => go('DASHBOARD')}
           onBack={() => go('DASHBOARD')}
         />
